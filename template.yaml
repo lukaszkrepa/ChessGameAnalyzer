@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Chess Analyzer - Spring Boot Lambda Function
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 1024
+    Runtime: java17
+    Architectures:
+      - x86_64
+
+Resources:
+  ChessAnalyzerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ChessAnalyzerFunction
+      Handler: com.chess.analyzer.backend.lambda.AsynchronousLambdaHandler
+      CodeUri: .
+      Events:
+        ProxyApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Runtime: java17
+      Timeout: 30
+      MemorySize: 1024
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
+Outputs:
+  ChessAnalyzerApi:
+    Description: "API Gateway endpoint URL for Chess Analyzer"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
