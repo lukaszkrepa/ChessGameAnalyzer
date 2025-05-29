@@ -69,11 +69,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-				<groupId>com.amazonaws.serverless</groupId>
-				<artifactId>aws-serverless-java-container-springboot2</artifactId>
-				<version>${springboot2.aws.version}</version>
-			</dependency>
 			<!-- AWS Lambda Java Core -->
 			<dependency>
 				<groupId>com.amazonaws</groupId>
