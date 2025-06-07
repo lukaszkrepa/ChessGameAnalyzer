@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Chess Analyzer Lambda with S3 and DynamoDB integration
+
+Resources:
+  ChessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: ChessAnalyzerApi
+      StageName: Prod
+
+  ChessAnalyzerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ChessAnalyzerFunction
+      Handler: com.chess.analyzer.backend.lambda.AsynchronousLambdaHandler
+      Runtime: java17
+      CodeUri: .
+      Timeout: 30
+      MemorySize: 1024
+      Events:
+        ProxyApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ChessApi
+            Path: /{proxy+}
+            Method: ANY
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref PGNUploadBucket
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ChessGamesTable
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+          BUCKET_NAME: !Ref PGNUploadBucket
+          CHESS_GAMES_TABLE: !Ref ChessGamesTable
+          AWS_BUCKET: !Ref PGNUploadBucket
+
+  PGNUploadBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub chess-analyzer-pgn-${AWS::AccountId}-${AWS::Region}
+
+  ChessGamesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub chess-games-${AWS::AccountId}-${AWS::Region}
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: gameId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: gameId
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+
+Outputs:
+  ChessAnalyzerApi:
+    Description: "API Gateway endpoint URL for Chess Analyzer"
+    Value: !Sub "https://${ChessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+
+  PGNUploadBucketName:
+    Description: "Name of the S3 bucket storing uploaded PGN files"
+    Value: !Ref PGNUploadBucket
+
+  ChessGamesTableName:
+    Description: "DynamoDB table for storing chess game metadata"
+    Value: !Ref ChessGamesTable

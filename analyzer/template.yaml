@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Java 21 Lambda for analyzing chess games with Stockfish
+
+Globals:
+  Function:
+    Timeout: 300
+    MemorySize: 1024
+    Runtime: java21
+    Architectures: [arm64]
+
+Resources:
+  GameAnalyzerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.example.java.GameAnalyzerLambda::handleRequest
+      CodeUri: .
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          JAVA_TOOL_OPTIONS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
