@@ -1,4 +1,4 @@
-package com.chess.analyzer.backend.utils;
+package com.chess.analyzer.backend.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

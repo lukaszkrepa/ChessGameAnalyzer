@@ -1,5 +1,6 @@
-package com.chess.analyzer.backend.utils;
+package com.chess.analyzer.backend.response;
 
+import com.chess.analyzer.backend.exception.ApiError;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

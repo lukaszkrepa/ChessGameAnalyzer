@@ -1,4 +1,4 @@
-package com.chess.analyzer.backend.utils;
+package com.chess.analyzer.backend.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

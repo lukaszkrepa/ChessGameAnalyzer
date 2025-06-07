@@ -1,6 +1,6 @@
 package com.chess.analyzer.backend.mappers;
 
-import com.chess.analyzer.backend.utils.ApiResponse;
+import com.chess.analyzer.backend.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

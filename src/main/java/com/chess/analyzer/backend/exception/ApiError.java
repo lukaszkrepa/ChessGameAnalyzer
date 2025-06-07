@@ -1,4 +1,4 @@
-package com.chess.analyzer.backend.utils;
+package com.chess.analyzer.backend.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
